@@ -84,12 +84,12 @@ Calculate and report the mean and median of total steps taken per day
 
 ```{r}
 ## Calculate the mean and median
-steps_mean<-mean(steps_day$steps, na.rm=T)
-steps_median<-median(steps_day$steps, na.rm=T)
+steps_mean<-format(mean(steps_day$steps, na.rm=T),digits=6,big.mark=" ",small.mark=".")
+steps_median<-format(median(steps_day$steps, na.rm=T),digits=6,big.mark=" ",small.mark=".")
 ```
 
-The mean number of steps per day is **r steps_mean**.
-The medium number of steps per day is **r steps_median**.
+The mean number of steps per day is **`r steps_mean`**.
+The medium number of steps per day is **`r steps_median`**.
 
 Histogram of the total numeber of steps per day is presented below:
 
@@ -117,7 +117,7 @@ steps_interval = aggregate(steps ~ interval, data=activity, FUN=mean)
 ## interval which contains the maximum number of steps
 maxsteps<-steps_interval[which.max(steps_interval$steps), "interval"]
 ```
-The 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps is  **r maxsteps**.
+The 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps is  **`r maxsteps`**.
 
 The maximum number of steps is the peak of the following time series plot:
 
@@ -143,7 +143,7 @@ number_miss<-sum(is.na(activity$steps))
 number_miss
 ```
 
-Number of rows with missing values is  **r number_miss**.
+Number of rows with missing values is  **`r number_miss`**.
 
 We fill in the missing values of steps variable with the median values for that 
 interval. We create a new data whitout missing values and we calculate the new mean and median of total steps per day.
@@ -176,14 +176,14 @@ Calculate and report the mean and median of total steps taken per day
 
 ```{r}
 ## Calculate the mean and median
-steps_mean_fill<-mean(steps_day_fill$steps)
-steps_median_fill<-median(steps_day_fill$steps)
+steps_mean_fill<-format(mean(steps_day_fill$steps),digits=6,big.mark=" ",small.mark=".")
+steps_median_fill<-format(median(steps_day_fill$steps),digits=6,big.mark=" ",small.mark=".")
 ```
 
-The mean number of steps per day is **r steps_mean_fill**.
-The medium number of steps per day is **r steps_median_fill**.
+The mean number of steps per day is **`r steps_mean_fill`**.
+The medium number of steps per day is **`r steps_median_fill`**.
 
-Histogram of the total numeber of steps per day is presented below:
+Histogram of the total number of steps per day is presented below:
 
 ```{r newhistogram, message=F, warning=F}
 library(ggplot2)
@@ -197,8 +197,8 @@ g7<-ggplot(steps_day_fill, aes(steps_day_fill$steps))+
 g7
 ```
 
-From the above we notice a slightly change in mean value from **r steps_mean** to **r steps_mean_fill**.There is not a significant change of meadian value from
-**r steps_mean** to **r steps_mean_fill**. 
+From the above we notice a slightly change in mean value from **`r steps_mean`** to **`r steps_mean_fill`**.There is not a significant change of median value from
+**`r steps_median`** to **`r steps_median_fill`**. 
 
 Comparing the two histograms, before and after imputing the missing values
 with the calculated median, we observe that the frequency of less steps increased.
