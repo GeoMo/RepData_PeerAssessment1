@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Introduction</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<div id="toc">
+<div id="toc_header">Table of Contents</div>
+<ul>
+<li>
+<a href="#toc_0">Introduction</a>
+</li>
+<li>
+<a href="#toc_1">Data</a>
+</li>
+<li>
+<a href="#toc_2">Loading and preprocessing the data</a>
+</li>
+<li>
+<a href="#toc_3">What is mean total number of steps taken per day?</a>
+</li>
+<li>
+<a href="#toc_4">What is the average daily activity pattern?</a>
+</li>
+<li>
+<a href="#toc_5">Imputing missing values</a>
+</li>
+<li>
+<a href="#toc_6">Are there differences in activity patterns between weekdays and weekends?</a>
+</li>
+</ul>
+</div>
+
+
+<h2 id="toc_0">Introduction</h2>
+
+<p>It is now possible to collect a large amount of data about personal
+movement using activity monitoring devices.</p>
+
+<p>This assignment makes use of data from a personal activity monitoring
+device. This device collects data at 5 minute intervals through out the
+day. The data consists of two months of data from an anonymous
+individual collected during the months of October and November, 2012
+and include the number of steps taken in 5 minute intervals each day.</p>
+
+<h2 id="toc_1">Data</h2>
+
+<p>The data for this assignment can be downloaded from the course web
+site:</p>
+
+<ul>
+<li>Dataset: <a href="https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip">Activity monitoring data</a> [52K]</li>
+</ul>
+
+<p>The variables included in this dataset are:</p>
+
+<ul>
+<li><p><strong>steps</strong>: Number of steps taking in a 5-minute interval (missing
+values are coded as <code>NA</code>)</p></li>
+<li><p><strong>date</strong>: The date on which the measurement was taken in YYYY-MM-DD
+format</p></li>
+<li><p><strong>interval</strong>: Identifier for the 5-minute interval in which
+measurement was taken</p></li>
+</ul>
+
+<p>The dataset is stored in a comma-separated-value (CSV) file and there
+are a total of 17,568 observations in this
+dataset.</p>
+
+<h2 id="toc_2">Loading and preprocessing the data</h2>
+
+<p>In order to show the code used to generate the output we make the following 
+global settings:</p>
+
+<pre><code class="r">library(knitr)
+opts_chunk$set(echo = TRUE, fig.width=11, fig.path=&quot;figures/&quot;)
+</code></pre>
+
+<p>Setting the locale to C, that being useful to read the weekdays in English. 
+Additionally, we ensure a clean environment. </p>
+
+<pre><code class="r">rm(list=ls())
+Sys.setlocale(&quot;LC_ALL&quot;, &quot;C&quot;)
+</code></pre>
+
+<pre><code>## [1] &quot;C&quot;
+</code></pre>
+
+<p>Load the data and convert &#39;date&#39; variable from character to date.</p>
+
+<pre><code class="r">## unzip and load data
+## unzip(zipfile=&quot;activity.zip&quot;, files=&quot;activity.csv&quot;)
+activity&lt;-read.csv(&quot;activity.csv&quot;, stringsAsFactors=FALSE)
+## transform date
+activity$date&lt;-as.Date(activity$date,&quot;%Y-%m-%d&quot;)
+## Check data
+summary(activity)
+</code></pre>
+
+<pre><code>##      steps             date               interval     
+##  Min.   :  0.00   Min.   :2012-10-01   Min.   :   0.0  
+##  1st Qu.:  0.00   1st Qu.:2012-10-16   1st Qu.: 588.8  
+##  Median :  0.00   Median :2012-10-31   Median :1177.5  
+##  Mean   : 37.38   Mean   :2012-10-31   Mean   :1177.5  
+##  3rd Qu.: 12.00   3rd Qu.:2012-11-15   3rd Qu.:1766.2  
+##  Max.   :806.00   Max.   :2012-11-30   Max.   :2355.0  
+##  NA&#39;s   :2304
+</code></pre>
+
+<p>There are 2304 missing values in steps variable.</p>
+
+<h2 id="toc_3">What is mean total number of steps taken per day?</h2>
+
+<p>Total number of steps per day, ignoring the missing values</p>
+
+<pre><code class="r">## sum per day, ignor missing values
+steps_day = aggregate(steps ~ date, data=activity, FUN=sum, na.rm=T)
+</code></pre>
+
+<p>Calculate and report the mean and median of total steps taken per day</p>
+
+<pre><code class="r">## Calculate the mean and median
+steps_mean&lt;-mean(steps_day$steps, na.rm=T)
+steps_median&lt;-median(steps_day$steps, na.rm=T)
+</code></pre>
+
+<p>The mean number of steps per day is <strong>r steps_mean</strong>.
+The medium number of steps per day is <strong>r steps_median</strong>.</p>
+
+<p>Histogram of the total numeber of steps per day is presented below:</p>
+
+<pre><code class="r">library(ggplot2)
+g5&lt;-ggplot(steps_day, aes(steps_day$steps))+
+        geom_histogram (binwidth=5000, fill=&quot;blue&quot;, colour=&quot;black&quot;)+
+        ggtitle(&quot;Histogram of total number of steps per day&quot;)+
+        labs(x = &quot;Steps&quot;, y = &quot;Frequency&quot;)+
+        scale_y_continuous(limits=c(0,30))+
+        scale_x_continuous(limits=c(0,25000))+
+        theme_bw(base_family = &quot;Avenir&quot;, base_size = 12)
+g5
+</code></pre>
+
+<p><img src="figures/histogram-1.png" alt="plot of chunk histogram"> </p>
+
+<h2 id="toc_4">What is the average daily activity pattern?</h2>
+
+<p>Average number of steps across all days:</p>
+
+<pre><code class="r">## average per day
+steps_interval = aggregate(steps ~ interval, data=activity, FUN=mean)
+</code></pre>
+
+<pre><code class="r">## interval which contains the maximum number of steps
+maxsteps&lt;-steps_interval[which.max(steps_interval$steps), &quot;interval&quot;]
+</code></pre>
+
+<p>The 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps is  <strong>r maxsteps</strong>.</p>
+
+<p>The maximum number of steps is the peak of the following time series plot:</p>
+
+<pre><code class="r">library(ggplot2)
+g6 &lt;- ggplot(steps_interval, aes(x=interval, y=steps)) +
+        geom_line(color=&quot;blue&quot;) +
+        labs(x=&quot;5 Minutes Interval&quot;, y=&quot;Average Number of Steps&quot;) +
+        ggtitle(&quot;Time series&quot;)+
+        theme_bw(base_family = &quot;Avenir&quot;, base_size = 12)
+g6
+</code></pre>
+
+<p><img src="figures/time%20series-1.png" alt="plot of chunk time series"> </p>
+
+<h2 id="toc_5">Imputing missing values</h2>
+
+<p>Note that there are a number of days/intervals where there are missing
+values (coded as <code>NA</code>). The presence of missing days may introduce
+bias into some calculations or summaries of the data.</p>
+
+<p>Find the number of incomplete cases</p>
+
+<pre><code class="r">number_miss&lt;-sum(is.na(activity$steps))
+number_miss
+</code></pre>
+
+<pre><code>## [1] 2304
+</code></pre>
+
+<p>Number of rows with missing values is  <strong>r number_miss</strong>.</p>
+
+<p>We fill in the missing values of steps variable with the median values for that 
+interval. We create a new data whitout missing values and we calculate the new mean and median of total steps per day.</p>
+
+<pre><code class="r">## data with mean by interval, when without missing 
+
+library(dplyr)
+median_interval&lt;- activity  %&gt;%
+        select(interval,steps)%&gt;%
+        group_by(interval)%&gt;%
+        summarise(med = as.integer(median(steps, na.rm = TRUE)))
+
+## merge 2 data by interval
+new_activity&lt;-merge(activity,median_interval, by=&quot;interval&quot;)
+## use mean to complete NA in steps
+new_activity&lt;-new_activity %&gt;%
+        mutate(steps = ifelse(is.na(steps), med, steps)) %&gt;%
+        select(date, interval, steps)
+</code></pre>
+
+<p>Total number of steps per day, after filling the missing values</p>
+
+<pre><code class="r">## sum per day, ignorr missing values
+steps_day_fill = aggregate(steps ~ date, data=new_activity, FUN=sum, na.rm=T)
+</code></pre>
+
+<p>Calculate and report the mean and median of total steps taken per day</p>
+
+<pre><code class="r">## Calculate the mean and median
+steps_mean_fill&lt;-mean(steps_day_fill$steps)
+steps_median_fill&lt;-median(steps_day_fill$steps)
+</code></pre>
+
+<p>The mean number of steps per day is <strong>r steps_mean_fill</strong>.
+The medium number of steps per day is <strong>r steps_median_fill</strong>.</p>
+
+<p>Histogram of the total numeber of steps per day is presented below:</p>
+
+<pre><code class="r">library(ggplot2)
+g7&lt;-ggplot(steps_day_fill, aes(steps_day_fill$steps))+
+        geom_histogram (binwidth=5000, fill=&quot;blue&quot;, colour=&quot;black&quot;)+
+        ggtitle(&quot;Histogram of total imputed number of steps per day&quot;)+
+        labs(x = &quot;Steps&quot;, y = &quot;Frequency&quot;)+
+        scale_y_continuous(limits=c(0,30))+
+        scale_x_continuous(limits=c(0,25000))+
+        theme_bw(base_family = &quot;Avenir&quot;, base_size = 12)
+g7
+</code></pre>
+
+<p><img src="figures/newhistogram-1.png" alt="plot of chunk newhistogram"> </p>
+
+<p>From the above we notice a slightly change in mean value from <strong>r steps_mean</strong> to <strong>r steps_mean_fill</strong>.There is not a significant change of meadian value from
+<strong>r steps_mean</strong> to <strong>r steps_mean_fill</strong>. </p>
+
+<p>Comparing the two histograms, before and after imputing the missing values
+with the calculated median, we observe that the frequency of less steps increased.</p>
+
+<h2 id="toc_6">Are there differences in activity patterns between weekdays and weekends?</h2>
+
+<p>In the dataset with the filled-in missing values we create a factor variable with two levels -- &quot;weekday&quot; and &quot;weekend&quot; indicating whether a given date is a weekday or weekend day. We calculate the averaged number of steps taken across weekday days or weekend days. </p>
+
+<pre><code class="r">## create a new factor variable weekday, weekend
+## calculate average by this new factor
+library(dplyr)
+activityweek &lt;- new_activity %&gt;%
+    mutate(weekday = factor(ifelse(weekdays(date)%in% c(&quot;Saturday&quot;, &quot;Sunday&quot;), &quot;Weekend&quot;, &quot;Weekday&quot;))) %&gt;%
+    select(weekday, interval, steps) %&gt;%
+    group_by(weekday, interval) %&gt;%
+    summarise(average = mean(steps))
+</code></pre>
+
+<p>The panel plot containing time series plot of interval and averaged number of steps across weekends versus weekdays. In weekend, it can be observe more activity.</p>
+
+<pre><code class="r">library(ggplot2)
+g8&lt;-ggplot(activityweek, aes(activityweek$interval,activityweek$average))+
+   geom_line(color=&quot;aquamarine4&quot;)+
+   facet_grid(weekday ~ .) +
+   theme_bw(base_family = &quot;Avenir&quot;, base_size = 12)+
+   labs(x = &quot;Interval&quot;, y = &quot;Average steps&quot;)+
+   ggtitle(&#39;Average Number of Steps by 5 minute Interval by Weekday/Weekend&#39;)     
+   g8
+</code></pre>
+
+<p><img src="figures/panel%20plot-1.png" alt="plot of chunk panel plot"> </p>
+
+</body>
+
+</html>
